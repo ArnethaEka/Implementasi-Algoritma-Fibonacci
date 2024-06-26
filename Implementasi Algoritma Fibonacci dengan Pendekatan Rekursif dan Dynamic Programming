@@ -1,1 +1,56 @@
+#include <iostream>
+#include <chrono>
 
+using namespace std;
+using namespace std::chrono;
+
+int fibonacci_recursive(int n) {
+    if (n <= 1)
+        return n;
+    else
+        return fibonacci_recursive(n - 1) + fibonacci_recursive(n - 2);
+}
+
+int fibonacci_dynamic(int n) {
+    int fib[n+1];
+    fib[0] = 0;
+    fib[1] = 1;
+    for (int i = 2; i <= n; ++i) {
+        fib[i] = fib[i - 1] + fib[i - 2];
+    }
+    return fib[n];
+}
+
+// Pendekatan Rekrusif
+double measure_execution_time_recursive(int n) {
+    auto start = high_resolution_clock::now();
+    fibonacci_recursive(n);
+    auto stop = high_resolution_clock::now();
+    auto duration = duration_cast<microseconds>(stop - start);
+    return duration.count();
+}
+
+// Pendekatan Dynamic Programming
+double measure_execution_time_dynamic(int n) {
+    auto start = high_resolution_clock::now();
+    fibonacci_dynamic(n);
+    auto stop = high_resolution_clock::now();
+    auto duration = duration_cast<microseconds>(stop - start);
+    return duration.count();
+}
+
+int main() {
+    int values_of_n[] = {10, 25, 30, 40, 50};
+    int size = sizeof(values_of_n) / sizeof(values_of_n[0]);
+
+    for (int i = 0; i < size; ++i) {
+        int n = values_of_n[i];
+        double time_recursive = measure_execution_time_recursive(n);
+        double time_dynamic = measure_execution_time_dynamic(n);
+        cout << "Nilai n = " << n << "\n";
+        cout << "Waktu eksekusi Fibonacci rekursif: " << time_recursive << " microseconds\n";
+        cout << "Waktu eksekusi Fibonacci dynamic programming: " << time_dynamic << " microseconds\n";
+    }
+
+    return 0;
+}
